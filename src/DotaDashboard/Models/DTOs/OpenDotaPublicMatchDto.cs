@@ -3,9 +3,9 @@
 namespace DotaDashboard.Models.DTOs;
 
 /// <summary>
-/// DTO representing a match from the OpenDota API.
+/// DTO for public matches from OpenDota API (/publicMatches endpoint)
 /// </summary>
-public class OpenDotaMatchDto
+public class OpenDotaPublicMatchDto
 {
     [JsonProperty("match_id")]
     public long MatchId { get; set; }
@@ -19,6 +19,9 @@ public class OpenDotaMatchDto
     [JsonProperty("radiant_win")]
     public bool RadiantWin { get; set; }
 
-    [JsonProperty("players")]
-    public List<OpenDotaPlayerDto>? Players { get; set; }
+    [JsonProperty("avg_mmr")]
+    public int? AvgMmr { get; set; }
+
+    [JsonProperty("num_mmr")]
+    public int? NumMmr { get; set; }
 }
