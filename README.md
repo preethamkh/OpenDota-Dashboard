@@ -18,12 +18,11 @@ A Dota 2 match analytics dashboard that:
 - **Deployment:** Render (free tier)
 
 ## Why PostgreSQL from Day 1?
-
-✅ Same database locally and in production
-✅ No migration headaches on deployment day
-✅ Better concurrent write support for background workers
-✅ Native support on all cloud platforms (Render, Railway, Fly.io)
-✅ Supabase free tier ready
+- Same database locally and in production
+- No migration headaches on deployment day
+- Better concurrent write support for background workers
+- Native support on all cloud platforms (Render, Railway, Fly.io)
+- Supabase free tier ready
 
 ## Quick Start (15 Minutes)
 
@@ -169,23 +168,23 @@ Remove-Migration
 ## Features
 
 ### Current (in progress...)
-✅ PostgreSQL database with EF Core
-✅ OpenDota API integration
-✅ Hero and match ingestion
-✅ Automatic aggregate stats
-✅ Rate limiting (60 calls/min)
+- PostgreSQL database with EF Core
+- OpenDota API integration
+- Hero and match ingestion
+- Automatic aggregate stats
+- Rate limiting (60 calls/min)
 
-### Coming ...
-🔄 Background job processing
-📊 Dashboard with charts
-📈 KPI cards
-🎨 Hero images and avatars
+### Coming up ...
+- Background job processing
+- Dashboard with charts
+- KPI cards
+- Hero images and avatars
 
 ### Next ...
-📋 Job management interface
-🧪 Unit & integration tests
-🚀 Cloud deployment
-✨ Final polish
+- Job management interface
+- Unit & integration tests
+- Cloud deployment
+- Final polish
 
 ## Deployment (TBD)
 
