@@ -1,10 +1,143 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">🎮 Welcome to OpenDota Dashboard</h1>
+    <p class="lead">A production-ready Dota 2 match analytics dashboard</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-database-fill text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">PostgreSQL Database</h5>
+                <p class="card-text">
+                    Production-ready PostgreSQL database running in Docker. Same setup for development and production.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-cloud-download-fill text-success" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">OpenDota API</h5>
+                <p class="card-text">
+                    Fetch match data, heroes, and player statistics from the public OpenDota API with rate limiting.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-bar-chart-fill text-info" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Analytics Dashboard</h5>
+                <p class="card-text">
+                    Visualize match statistics, hero win rates, and player performance with interactive charts.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">🚀 Getting Started</h5>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li class="mb-2">
+                        <strong>Verify Docker is running:</strong>
+                        Check that PostgreSQL and RabbitMQ containers are up
+                        <br>
+                        <code>docker ps</code>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Test data ingestion:</strong>
+                        <a asp-page="/TestIngestion" class="btn btn-sm btn-primary">Go to Test Ingestion Page</a>
+                    </li>
+                    <li class="mb-2">
+                        <strong>View your data:</strong>
+                        Open <a href="http://localhost:5050" target="_blank">pgAdmin</a> to see the database
+                    </li>
+                    <li class="mb-2">
+                        <strong>Check RabbitMQ:</strong>
+                        Open <a href="http://localhost:15672" target="_blank">RabbitMQ Management</a> (admin/admin123)
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Initial: Setup Complete</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li>PostgreSQL database configured</li>
+                    <li>Entity Framework Core setup</li>
+                    <li>OpenDota API client</li>
+                    <li>Data ingestion services</li>
+                    <li>Test page functional</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Coming Next</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li>Dashboard with KPIs</li>
+                    <li>Chart.js visualizations</li>
+                    <li>RabbitMQ background jobs</li>
+                    <li>Recent matches table</li>
+                    <li>Job worker service</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4 mb-5">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <h5 class="alert-heading">ℹQuick Links</h5>
+            <ul class="mb-0">
+                <li><strong>Your App:</strong> You're here!</li>
+                <li><strong>Test Ingestion:</strong> <a asp-page="/TestIngestion">Test the API integration</a></li>
+                <li>
+                    <strong>pgAdmin:</strong> <a href="http://localhost:5050" target="_blank">Database management UI</a>
+                </li>
+                <li>
+                    <strong>RabbitMQ:</strong> <a href="http://localhost:15672" target="_blank">
+                        Message queue
+                        management
+                    </a>
+                </li>
+                <li>
+                    <strong>OpenDota API:</strong> <a href="https://docs.opendota.com" target="_blank">
+                        API
+                        documentation
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
