@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: opendota-postgres
+    environment:
+      POSTGRES_DB: opendota
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - opendota-network
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: opendota-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    ports:
+      - "5672:5672" # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - opendota-network
+
+  # pgAdmin - Database Management UI (Optional but useful)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: opendota-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@opendota.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - opendota-network
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  pgadmin_data:
+
+networks:
+  opendota-network:
+    driver: bridge
