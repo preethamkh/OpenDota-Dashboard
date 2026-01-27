@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\DTOs\" />
-    <Folder Include="Data\" />
     <Folder Include="Helpers\" />
     <Folder Include="Workers\" />
     <Folder Include="Services\Interfaces\" />
