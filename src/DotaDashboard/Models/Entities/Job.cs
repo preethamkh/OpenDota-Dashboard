@@ -23,6 +23,7 @@ public class Job
 
     public int Retries { get; set; }
 
+    [MaxLength(1000)]
     public string? Error { get; set; }
 
     [Required]
