@@ -54,7 +54,8 @@
                         <div class="d-flex align-items-center mt-2">
                             @if (!string.IsNullOrEmpty(Model.ViewModel.TopHero.ImageUrl))
                             {
-                                <img src="@Model.ViewModel.TopHero.ImageUrl" alt="@Model.ViewModel.TopHero.Name" class="hero-img me-2" />
+                                <img src="@Model.ViewModel.TopHero.ImageUrl" alt="@Model.ViewModel.TopHero.Name"
+                                    class="hero-img me-2" />
                             }
                             <div>
                                 <div class="fw-bold">@Model.ViewModel.TopHero.Name</div>
@@ -184,10 +185,8 @@
                                                 <div class="d-flex flex-wrap gap-1">
                                                     @foreach (var hero in match.Heroes.Take(10))
                                                     {
-                                                        <img src="@hero.HeroImageUrl"
-                                                             alt="@hero.HeroName"
-                                                             class="hero-img"
-                                                             title="@hero.HeroName - @hero.PlayerName (@hero.Kills/@hero.Deaths/@hero.Assists)" />
+                                                        <img src="@hero.HeroImageUrl" alt="@hero.HeroName" class="hero-img"
+                                                            title="@hero.HeroName - @hero.PlayerName (@hero.Kills/@hero.Deaths/@hero.Assists)" />
                                                     }
                                                 </div>
                                             </td>
@@ -276,10 +275,10 @@
         new Chart(document.getElementById('heroesChart'), {
             type: 'bar',
             data: {
-                labels: heroesData.map(h => h.name),
+                labels: heroesData.map(h => h.Name),
                 datasets: [{
                     label: 'Win Rate (%)',
-                    data: heroesData.map(h => h.winRate),
+                    data: heroesData.map(h => h.WinRate),
                     backgroundColor: 'rgba(40, 167, 69, 0.8)',
                     borderColor: 'rgba(40, 167, 69, 1)',
                     borderWidth: 1
@@ -293,9 +292,10 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context)
+                            {
                                 const hero = heroesData[context.dataIndex];
-                                return `Win Rate: ${hero.winRate.toFixed(1)}% (${hero.totalWins}/${hero.totalPicks})`;
+                                return `Win Rate: ${hero.WinRate.toFixed(1)}% (${hero.TotalWins}/${hero.TotalPicks})`;
                             }
                         }
                     }
@@ -314,10 +314,10 @@
         new Chart(document.getElementById('playersChart'), {
             type: 'bar',
             data: {
-                labels: playersData.map(p => p.name),
+                labels: playersData.map(p => p.Name),
                 datasets: [{
                     label: 'KDA',
-                    data: playersData.map(p => p.kda),
+                    data: playersData.map(p => p.Kda),
                     backgroundColor: 'rgba(0, 123, 255, 0.8)',
                     borderColor: 'rgba(0, 123, 255, 1)',
                     borderWidth: 1
@@ -330,9 +330,10 @@
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context)
+                            {
                                 const player = playersData[context.dataIndex];
-                                return `KDA: ${player.kda.toFixed(2)} (${player.totalKills}/${player.totalDeaths}/${player.totalAssists})`;
+                                return `KDA: ${player.Kda.toFixed(2)} (${player.TotalKills}/${player.TotalDeaths}/${player.TotalAssists})`;
                             }
                         }
                     }
@@ -350,10 +351,10 @@
         new Chart(document.getElementById('volumeChart'), {
             type: 'line',
             data: {
-                labels: volumeData.map(v => new Date(v.hour).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })),
+                labels: volumeData.map(v => new Date(v.Hour).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })),
                 datasets: [{
                     label: 'Matches',
-                    data: volumeData.map(v => v.matchCount),
+                    data: volumeData.map(v => v.MatchCount),
                     fill: true,
                     backgroundColor: 'rgba(23, 162, 184, 0.2)',
                     borderColor: 'rgba(23, 162, 184, 1)',
