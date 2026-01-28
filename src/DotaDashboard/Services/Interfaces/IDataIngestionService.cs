@@ -11,6 +11,11 @@ public interface IDataIngestionService
     /// <returns>Number of heroes ingested</returns>
     Task<int> IngestHeroesAsync();
 
+    /// <summary>
+    /// Ingest recent professional matches
+    /// </summary>
+    /// <param name="limit"></param>
+    /// <returns></returns>
     Task<int> IngestProMatchesAsync(int limit = 10);
 
     ///// <summary>

@@ -15,6 +15,13 @@ public interface IOpenDotaService
     Task<List<OpenDotaPublicMatchDto>> GetPublicMatchesAsync(int limit = 50);
 
     /// <summary>
+    /// Get recent professional matches
+    /// </summary>
+    /// <param name="limit"></param>
+    /// <returns></returns>
+    Task<List<OpenDotaPublicMatchDto>> GetProMatchesAsync(int limit = 50);
+
+    /// <summary>
     /// Get detailed information about a specific match
     /// </summary>
     /// <param name="matchId">The match ID</param>
@@ -33,6 +40,4 @@ public interface IOpenDotaService
     /// <param name="accountId">The player's account ID</param>
     /// <returns>Player profile DTO</returns>
     Task<OpenDotaPlayerProfileDto?> GetPlayerProfileAsync(long accountId);
-
-    Task<List<OpenDotaPublicMatchDto>> GetProMatchesAsync(int limit = 50);
 }
