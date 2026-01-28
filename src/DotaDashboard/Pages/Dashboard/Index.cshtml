@@ -1,0 +1,385 @@
+﻿@* File: Pages/Dashboard/Index.cshtml *@
+@page
+@model DotaDashboard.Pages.Dashboard.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">📊 Dashboard</h1>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createJobModal">
+                <i class="bi bi-plus-circle"></i> Create Job
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="location.reload()">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- KPI Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card kpi-card primary">
+                <div class="card-body">
+                    <div class="kpi-label">Total Matches</div>
+                    <div class="kpi-value">@Model.ViewModel.TotalMatches.ToString("N0")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card kpi-card success">
+                <div class="card-body">
+                    <div class="kpi-label">Top Hero</div>
+                    @if (Model.ViewModel.TopHero != null)
+                    {
+                        <div class="d-flex align-items-center mt-2">
+                            @if (!string.IsNullOrEmpty(Model.ViewModel.TopHero.ImageUrl))
+                            {
+                                <img src="@Model.ViewModel.TopHero.ImageUrl" alt="@Model.ViewModel.TopHero.Name" class="hero-img me-2" />
+                            }
+                            <div>
+                                <div class="fw-bold">@Model.ViewModel.TopHero.Name</div>
+                                <small class="text-muted">@Model.ViewModel.TopHero.WinRate.ToString("F1")% WR</small>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="kpi-value">N/A</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <div class="card kpi-card info">
+                <div class="card-body">
+                    <div class="kpi-label">Top Player</div>
+                    @if (Model.ViewModel.TopPlayer != null)
+                    {
+                        <div class="mt-2">
+                            <div class="fw-bold small">@Model.ViewModel.TopPlayer.Name</div>
+                            <div class="kpi-value">@Model.ViewModel.TopPlayer.Kda.ToString("F2")</div>
+                            <small class="text-muted">KDA</small>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="kpi-value">N/A</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <div class="card kpi-card warning">
+                <div class="card-body">
+                    <div class="kpi-label">Total Players</div>
+                    <div class="kpi-value">@Model.ViewModel.TotalPlayers.ToString("N0")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <div class="card kpi-card @(Model.ViewModel.ActiveJobs > 0 ? "success" : "secondary")">
+                <div class="card-body">
+                    <div class="kpi-label">Active Jobs</div>
+                    <div class="kpi-value">@Model.ViewModel.ActiveJobs</div>
+                    @if (Model.ViewModel.ActiveJobs > 0)
+                    {
+                        <small class="text-success"><i class="bi bi-circle-fill"></i> Processing</small>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">🏆 Top Heroes by Win Rate</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="heroesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">👑 Top Players by KDA</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="playersChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📈 Match Volume (Last 24 Hours)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="volumeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Matches Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">⚔️ Recent Matches</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.ViewModel.RecentMatches.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Match ID</th>
+                                        <th>Heroes</th>
+                                        <th>K/D/A</th>
+                                        <th>Result</th>
+                                        <th>Duration</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var match in Model.ViewModel.RecentMatches)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <code>@match.MatchId</code>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    @foreach (var hero in match.Heroes.Take(10))
+                                                    {
+                                                        <img src="@hero.HeroImageUrl"
+                                                             alt="@hero.HeroName"
+                                                             class="hero-img"
+                                                             title="@hero.HeroName - @hero.PlayerName (@hero.Kills/@hero.Deaths/@hero.Assists)" />
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary">
+                                                    @match.TotalKills / @match.TotalDeaths / @match.TotalAssists
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (match.RadiantWin)
+                                                {
+                                                    <span class="badge bg-success">Radiant Victory</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Dire Victory</span>
+                                                }
+                                            </td>
+                                            <td>@TimeSpan.FromSeconds(match.Duration).ToString(@"mm\:ss")</td>
+                                            <td>
+                                                <small class="text-muted">@match.StartTime.ToString("MMM dd, HH:mm")</small>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No matches found. Use the Test Ingestion page or create an IngestMatches job to load data.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Job Modal -->
+<div class="modal fade" id="createJobModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Job</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="CreateJob">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="jobType" class="form-label">Job Type</label>
+                        <select class="form-select" id="jobType" name="jobType" required>
+                            <option value="IngestMatches">Ingest Matches (Fetch new pro matches)</option>
+                            <option value="IngestHeroes">Ingest Heroes (Update hero list)</option>
+                            <option value="AggregateStats">Aggregate Stats (Recalculate statistics)</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-info">
+                        <small>
+                            <strong>Note:</strong> Jobs are processed by a background worker.
+                            Check the Active Jobs counter to monitor progress.
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Job</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        // Prepare data from server
+        const heroesData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ViewModel.TopHeroes));
+        const playersData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ViewModel.TopPlayers));
+        const volumeData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ViewModel.MatchVolume));
+
+        // Top Heroes Chart
+        new Chart(document.getElementById('heroesChart'), {
+            type: 'bar',
+            data: {
+                labels: heroesData.map(h => h.name),
+                datasets: [{
+                    label: 'Win Rate (%)',
+                    data: heroesData.map(h => h.winRate),
+                    backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const hero = heroesData[context.dataIndex];
+                                return `Win Rate: ${hero.winRate.toFixed(1)}% (${hero.totalWins}/${hero.totalPicks})`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'Win Rate (%)' }
+                    }
+                }
+            }
+        });
+
+        // Top Players Chart
+        new Chart(document.getElementById('playersChart'), {
+            type: 'bar',
+            data: {
+                labels: playersData.map(p => p.name),
+                datasets: [{
+                    label: 'KDA',
+                    data: playersData.map(p => p.kda),
+                    backgroundColor: 'rgba(0, 123, 255, 0.8)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const player = playersData[context.dataIndex];
+                                return `KDA: ${player.kda.toFixed(2)} (${player.totalKills}/${player.totalDeaths}/${player.totalAssists})`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'KDA Ratio' }
+                    }
+                }
+            }
+        });
+
+        // Match Volume Chart
+        new Chart(document.getElementById('volumeChart'), {
+            type: 'line',
+            data: {
+                labels: volumeData.map(v => new Date(v.hour).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })),
+                datasets: [{
+                    label: 'Matches',
+                    data: volumeData.map(v => v.matchCount),
+                    fill: true,
+                    backgroundColor: 'rgba(23, 162, 184, 0.2)',
+                    borderColor: 'rgba(23, 162, 184, 1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0 },
+                        title: { display: true, text: 'Number of Matches' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Time (Last 24 Hours)' }
+                    }
+                }
+            }
+        });
+
+        // Auto-refresh every 30 seconds (optional)
+        // setTimeout(() => location.reload(), 30000);
+    </script>
+}
