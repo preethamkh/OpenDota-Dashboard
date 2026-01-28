@@ -1,0 +1,133 @@
+﻿@* File: Pages/TestIngestion.cshtml *@
+@page
+@model DotaDashboard.Pages.TestIngestionModel
+@{
+    ViewData["Title"] = "Test Data Ingestion";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">🎮 Test Data Ingestion</h1>
+    <p class="lead">Test the OpenDota API integration and data ingestion pipeline</p>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert @(Model.Message.Contains("Error") ? "alert-danger" : "alert-success") mt-3" role="alert">
+            <strong>@Model.Message</strong>
+        </div>
+    }
+
+    <div class="row mt-4">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">🦸 Step 1: Ingest Heroes</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Load all Dota 2 heroes from the OpenDota API into your PostgreSQL database.
+                        This should fetch approximately 120-130 heroes.
+                    </p>
+                    <form method="post" asp-page-handler="IngestHeroes">
+                        <button type="submit" class="btn btn-primary btn-lg w-100" @(Model.IsProcessing ? "disabled" : "")>
+                            <i class="bi bi-download"></i> Ingest Heroes
+                        </button>
+                    </form>
+                    @if (Model.HeroesIngested > 0)
+                    {
+                        <div class="mt-3 p-3 bg-success text-white rounded">
+                            <strong>✓ @Model.HeroesIngested heroes ingested successfully!</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">⚔️ Step 2: Ingest Matches</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Fetch and store recent public matches with full player details and statistics.
+                        Limited to 5 matches for testing to respect API rate limits.
+                    </p>
+                    <form method="post" asp-page-handler="IngestMatches">
+                        <button type="submit" class="btn btn-success btn-lg w-100" @(Model.IsProcessing ? "disabled" : "")>
+                            <i class="bi bi-download"></i> Ingest Matches
+                        </button>
+                    </form>
+                    @if (Model.MatchesIngested > 0)
+                    {
+                        <div class="mt-3 p-3 bg-success text-white rounded">
+                            <strong>✓ @Model.MatchesIngested matches ingested successfully!</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <h5 class="alert-heading">Important Notes</h5>
+                <ul class="mb-0">
+                    <li><strong>Rate Limits:</strong> OpenDota API allows 60 calls per minute. Match ingestion includes 1-second delays between requests.</li>
+                    <li><strong>Processing Time:</strong> Heroes load in 2-3 seconds. Matches take 5-10 seconds due to rate limiting (5 matches × 1 second each).</li>
+                    <li><strong>Database:</strong> Data is stored in PostgreSQL running in Docker. Check pgAdmin at <a href="http://localhost:5050" target="_blank">localhost:5050</a></li>
+                    <li><strong>First Time:</strong> Always ingest heroes first before ingesting matches!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">What Happens Behind the Scenes</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li><strong>Heroes:</strong> Fetches all hero data including names and image URLs</li>
+                        <li><strong>Matches:</strong> Fetches recent public matches and their full details</li>
+                        <li><strong>Players:</strong> Automatically creates player records for each match participant</li>
+                        <li><strong>Statistics:</strong> Calculates aggregate stats (K/D/A, win rates) automatically</li>
+                        <li><strong>Relationships:</strong> Links matches, players, and heroes via MatchPlayers junction table</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Next Steps After Testing</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>View your data in <strong>pgAdmin</strong> at <a href="http://localhost:5050" target="_blank">localhost:5050</a></li>
+                        <li>Check <strong>RabbitMQ Management</strong> at <a href="http://localhost:15672" target="_blank">localhost:15672</a> (admin/admin123)</li>
+                        <li><strong>Next steps</strong>: Building the dashboard with charts and KPIs!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-refresh page after form submission to prevent double-submit
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                const button = this.querySelector('button[type="submit"]');
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+            });
+        });
+    </script>
+}

@@ -9,8 +9,6 @@
   <ItemGroup>
     <Folder Include="Helpers\" />
     <Folder Include="Workers\" />
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="Services\Implementation\" />
   </ItemGroup>
 
   <ItemGroup>
