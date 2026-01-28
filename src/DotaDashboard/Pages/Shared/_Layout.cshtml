@@ -1,4 +1,4 @@
-﻿@* File: Pages/Shared/_Layout.cshtml *@
+﻿@* File: Pages/Shared/_Layout.cshtml (UPDATED for Day 2) *@
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +18,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">
                     🎮 OpenDota Dashboard
                 </a>
@@ -29,34 +29,76 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-page="/Index">
+                                <i class="bi bi-house"></i> Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/TestIngestion">Test Ingestion</a>
+                            <a class="nav-link" asp-area="" asp-page="/Dashboard/Index">
+                                <i class="bi bi-bar-chart"></i> Dashboard
+                            </a>
                         </li>
-                        @* Upcoming links will go here *@
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/TestIngestion">
+                                <i class="bi bi-cloud-download"></i> Test Ingestion
+                            </a>
+                        </li>
+                        @* Upcoming link *@
                         @* <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Dashboard/Index">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Jobs/Index">Jobs</a>
+                            <a class="nav-link" asp-area="" asp-page="/Jobs/Index">
+                                <i class="bi bi-list-task"></i> Jobs
+                            </a>
                         </li> *@
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="toolsDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-tools"></i> Tools
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="toolsDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="http://localhost:5050" target="_blank">
+                                        <i class="bi bi-database"></i> pgAdmin
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="http://localhost:15672" target="_blank">
+                                        <i class="bi bi-diagram-3"></i> RabbitMQ
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="https://docs.opendota.com" target="_blank">
+                                        <i class="bi bi-book"></i> OpenDota API Docs
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - OpenDota Dashboard -
-            <a href="https://docs.opendota.com" target="_blank">OpenDota API</a>
+    <footer class="border-top footer text-muted mt-5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    &copy; 2024 - OpenDota Dashboard
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="https://docs.opendota.com" target="_blank">OpenDota API</a> |
+                    <a href="http://localhost:5050" target="_blank">pgAdmin</a> |
+                    <a href="http://localhost:15672" target="_blank">RabbitMQ</a>
+                </div>
+            </div>
         </div>
     </footer>
 
