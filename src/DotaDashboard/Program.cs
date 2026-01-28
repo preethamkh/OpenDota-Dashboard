@@ -1,6 +1,8 @@
 using DotaDashboard.Data;
+using DotaDashboard.Helpers;
 using DotaDashboard.Services.Implementation;
 using DotaDashboard.Services.Interfaces;
+using DotaDashboard.Workers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,9 +37,25 @@ builder.Services.AddHttpClient("OpenDotaApi", client =>
     client.Timeout = TimeSpan.FromSeconds(30);
 });
 
+// Register RateLimiterService as Singleton
+builder.Services.AddSingleton(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var rateLimit = config.GetValue("OpenDotaApi:RateLimitPerMinute", 60);
+    return new RateLimiterService(rateLimit);
+});
+
 // Register application services
 builder.Services.AddScoped<IOpenDotaService, OpenDotaService>();
 builder.Services.AddScoped<IDataIngestionService, DataIngestionService>();
+builder.Services.AddScoped<IAggregateStatsService, AggregateStatsService>();
+builder.Services.AddScoped<IJobService, JobService>();
+
+// Register RabbitMQ Helper as Singleton
+builder.Services.AddSingleton<RabbitMqHelper>();
+
+// Register Background Worker
+builder.Services.AddHostedService<JobWorker>();
 
 var app = builder.Build();
 
