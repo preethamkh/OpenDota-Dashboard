@@ -9,6 +9,10 @@ public class RateLimiterService(int maxCallsPerMinute = 60)
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private readonly Queue<DateTime> _callTimestamps = new();
 
+    /// <summary>
+    /// Waits until a slot is available to make an API call
+    /// </summary>
+    /// <returns></returns>
     public async Task WaitForSlotAsync()
     {
         // Ensures only one thread can execute this logic at a time
