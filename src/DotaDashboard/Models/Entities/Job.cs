@@ -5,6 +5,12 @@ namespace DotaDashboard.Models.Entities;
 // To track background tasks or processing jobs related to Dota matches.
 public class Job
 {
+    // Reason for using int:
+    // Sequential background jobs - created in order and auto-incrementing ID
+    // Better performance due to smaller index size
+    // Human readable
+    // DB generated
+    // URL friendly
     [Key]
     public int JobId { get; set; }
 
