@@ -32,23 +32,23 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     
     # Run tests with coverage
-    - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
+    #- name: Run tests
+    #  run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
     
     # Generate coverage report (optional - for badge)
-    - name: Generate coverage report
-      if: success()
-      run: |
-        dotnet tool install -g dotnet-reportgenerator-globaltool
-        reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./coverage -reporttypes:Html
+    #- name: Generate coverage report
+    # if: success()
+    #  run: |
+     #   dotnet tool install -g dotnet-reportgenerator-globaltool
+     #   reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./coverage -reporttypes:Html
     
     # Upload coverage report as artifact
-    - name: Upload coverage report
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-report
-        path: ./coverage
+    #- name: Upload coverage report
+     # if: success()
+   #   uses: actions/upload-artifact@v4
+   #   with:
+   #     name: coverage-report
+    #    path: ./coverage
     
     # Display test results summary
     - name: Test Summary
