@@ -5,62 +5,122 @@
     ViewData["Title"] = "Test Data Ingestion";
 }
 
-<div class="container mt-5">
-    <h1 class="mb-4">🎮 Test Data Ingestion</h1>
-    <p class="lead">Test the OpenDota API integration and data ingestion pipeline</p>
+<div class="mb-5">
+    <div class="text-center mb-4">
+        <div style="display: inline-block; font-size: 4rem; margin-bottom: 1rem;">🚀</div>
+        <h1 class="display-5 fw-bold mb-3">
+            <span class="text-gradient">Test Data Ingestion</span>
+        </h1>
+        <p class="lead text-secondary">
+            Validate your OpenDota API integration and data ingestion pipeline
+        </p>
+    </div>
 
     @if (!string.IsNullOrEmpty(Model.Message))
     {
-        <div class="alert @(Model.Message.Contains("Error") ? "alert-danger" : "alert-success") mt-3" role="alert">
-            <strong>@Model.Message</strong>
+        <div class="alert @(Model.Message.Contains("Error") || Model.Message.Contains("Failed") ? "alert-danger" : "alert-success") alert-dismissible fade show shadow-premium"
+            role="alert">
+            <div class="d-flex align-items-center">
+                <i
+                    class="bi @(Model.Message.Contains("Error") || Model.Message.Contains("Failed") ? "bi-exclamation-triangle-fill" : "bi-check-circle-fill") fs-4 me-3"></i>
+                <div>
+                    <strong>@Model.Message</strong>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
-    <div class="row mt-4">
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">🦸 Step 1: Ingest Heroes</h5>
+    <!-- Main Action Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-premium border-0">
+                <div class="card-header text-white" style="background: var(--primary-gradient);">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-shield-fill-check fs-3 me-3"></i>
+                        <div>
+                            <h4 class="mb-0 fw-bold">Step 1: Ingest Heroes</h4>
+                            <small class="opacity-90">Load hero database</small>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text">
-                        Load all Dota 2 heroes from the OpenDota API into your PostgreSQL database.
-                        This should fetch approximately 120-130 heroes.
-                    </p>
-                    <form method="post" asp-page-handler="IngestHeroes">
-                        <button type="submit" class="btn btn-primary btn-lg w-100" @(Model.IsProcessing ? "disabled" : "")>
-                            <i class="bi bi-download"></i> Ingest Heroes
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <p class="text-secondary mb-3">
+                            <i class="bi bi-info-circle-fill text-primary me-2"></i>
+                            Fetches all Dota 2 heroes from the OpenDota API and stores them in your database.
+                        </p>
+                        <div class="d-flex align-items-center gap-3 text-secondary small">
+                            <div><i class="bi bi-clock-fill text-info me-1"></i> ~3 seconds</div>
+                            <div><i class="bi bi-database-fill text-success me-1"></i> ~125 heroes</div>
+                            <div><i class="bi bi-speedometer text-warning me-1"></i> 1 API call</div>
+                        </div>
+                    </div>
+
+                    <form method="post" asp-page-handler="IngestHeroes" class="hero-form">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold" @(Model.IsProcessing ?
+                                                                                                                       "disabled" : "")>
+                            <i class="bi bi-download"></i> Start Hero Ingestion
                         </button>
                     </form>
+
                     @if (Model.HeroesIngested > 0)
                     {
-                        <div class="mt-3 p-3 bg-success text-white rounded">
-                            <strong>✓ @Model.HeroesIngested heroes ingested successfully!</strong>
+                        <div class="mt-4 p-4 rounded" style="background: var(--success-gradient); color: white;">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill fs-3 me-3"></i>
+                                <div>
+                                    <strong class="fs-5">Success!</strong>
+                                    <div class="mt-1">@Model.HeroesIngested heroes loaded successfully</div>
+                                </div>
+                            </div>
                         </div>
                     }
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">⚔️ Step 2: Ingest Matches</h5>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-premium border-0">
+                <div class="card-header text-white" style="background: var(--success-gradient);">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-trophy-fill fs-3 me-3"></i>
+                        <div>
+                            <h4 class="mb-0 fw-bold">Step 2: Ingest Matches</h4>
+                            <small class="opacity-90">Load match data</small>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text">
-                        Fetch and store recent public matches with full player details and statistics.
-                        Limited to 5 matches for testing to respect API rate limits.
-                    </p>
-                    <form method="post" asp-page-handler="IngestMatches">
-                        <button type="submit" class="btn btn-success btn-lg w-100" @(Model.IsProcessing ? "disabled" : "")>
-                            <i class="bi bi-download"></i> Ingest Matches
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <p class="text-secondary mb-3">
+                            <i class="bi bi-info-circle-fill text-success me-2"></i>
+                            Fetches recent public matches with complete player statistics and details.
+                        </p>
+                        <div class="d-flex align-items-center gap-3 text-secondary small">
+                            <div><i class="bi bi-clock-fill text-info me-1"></i> ~8 seconds</div>
+                            <div><i class="bi bi-database-fill text-success me-1"></i> 5 matches</div>
+                            <div><i class="bi bi-speedometer text-warning me-1"></i> 6 API calls</div>
+                        </div>
+                    </div>
+
+                    <form method="post" asp-page-handler="IngestMatches" class="match-form">
+                        <button type="submit" class="btn btn-success btn-lg w-100 fw-bold" @(Model.IsProcessing ?
+                                                                                                                       "disabled" : "")>
+                            <i class="bi bi-download"></i> Start Match Ingestion
                         </button>
                     </form>
+
                     @if (Model.MatchesIngested > 0)
                     {
-                        <div class="mt-3 p-3 bg-success text-white rounded">
-                            <strong>✓ @Model.MatchesIngested matches ingested successfully!</strong>
+                        <div class="mt-4 p-4 rounded" style="background: var(--success-gradient); color: white;">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill fs-3 me-3"></i>
+                                <div>
+                                    <strong class="fs-5">Success!</strong>
+                                    <div class="mt-1">@Model.MatchesIngested matches ingested with full player data</div>
+                                </div>
+                            </div>
                         </div>
                     }
                 </div>
@@ -68,51 +128,164 @@
         </div>
     </div>
 
-    <div class="row mt-4">
+    <!-- Important Information -->
+    <div class="row mb-5">
         <div class="col-12">
-            <div class="alert alert-info" role="alert">
-                <h5 class="alert-heading">Important Notes</h5>
-                <ul class="mb-0">
-                    <li><strong>Rate Limits:</strong> OpenDota API allows 60 calls per minute. Match ingestion includes 1-second delays between requests.</li>
-                    <li><strong>Processing Time:</strong> Heroes load in 2-3 seconds. Matches take 5-10 seconds due to rate limiting (5 matches × 1 second each).</li>
-                    <li><strong>Database:</strong> Data is stored in PostgreSQL running in Docker. Check pgAdmin at <a href="http://localhost:5050" target="_blank">localhost:5050</a></li>
-                    <li><strong>First Time:</strong> Always ingest heroes first before ingesting matches!</li>
-                </ul>
+            <div class="card shadow-premium border-0"
+                style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-lightbulb-fill text-warning fs-4 me-2"></i>
+                        Important Notes & Best Practices
+                    </h5>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-speedometer2 text-primary fs-4 me-3 mt-1"></i>
+                                <div>
+                                    <strong class="d-block mb-2">Rate Limiting</strong>
+                                    <p class="text-secondary small mb-0">
+                                        OpenDota API allows 60 calls per minute. Our service includes 1-second delays
+                                        between requests to ensure compliance and prevent throttling.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-clock-history text-info fs-4 me-3 mt-1"></i>
+                                <div>
+                                    <strong class="d-block mb-2">Processing Time</strong>
+                                    <p class="text-secondary small mb-0">
+                                        Heroes load quickly (~3s). Matches take longer (~8s) due to multiple
+                                        API calls with rate limiting for each match detail fetch.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-database-fill text-success fs-4 me-3 mt-1"></i>
+                                <div>
+                                    <strong class="d-block mb-2">Database Access</strong>
+                                    <p class="text-secondary small mb-0">
+                                        All data is stored in PostgreSQL running in Docker. Access pgAdmin at
+                                        <a href="http://localhost:5050" target="_blank"
+                                            class="fw-bold">localhost:5050</a>
+                                        to inspect tables and query data.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-exclamation-triangle-fill text-warning fs-4 me-3 mt-1"></i>
+                                <div>
+                                    <strong class="d-block mb-2">First Time Setup</strong>
+                                    <p class="text-secondary small mb-0">
+                                        Always ingest heroes <strong>before</strong> ingesting matches!
+                                        Matches reference hero IDs that must exist in the database first.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-4">
+    <!-- Technical Details -->
+    <div class="row mb-5">
         <div class="col-12">
-            <div class="card">
+            <div class="card shadow-premium">
                 <div class="card-header">
-                    <h5 class="mb-0">What Happens Behind the Scenes</h5>
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-gear-fill"></i> Behind the Scenes
+                    </h5>
                 </div>
                 <div class="card-body">
-                    <ol>
-                        <li><strong>Heroes:</strong> Fetches all hero data including names and image URLs</li>
-                        <li><strong>Matches:</strong> Fetches recent public matches and their full details</li>
-                        <li><strong>Players:</strong> Automatically creates player records for each match participant</li>
-                        <li><strong>Statistics:</strong> Calculates aggregate stats (K/D/A, win rates) automatically</li>
-                        <li><strong>Relationships:</strong> Links matches, players, and heroes via MatchPlayers junction table</li>
-                    </ol>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h6 class="fw-bold text-primary mb-3">
+                                <i class="bi bi-1-circle-fill me-2"></i>Heroes Ingestion
+                            </h6>
+                            <ul class="list-unstyled ms-4">
+                                <li class="mb-2"><i class="bi bi-arrow-right-circle text-success me-2"></i>Fetches
+                                    complete hero roster with metadata</li>
+                                <li class="mb-2"><i class="bi bi-arrow-right-circle text-success me-2"></i>Stores names,
+                                    IDs, and image URLs</li>
+                                <li class="mb-2"><i class="bi bi-arrow-right-circle text-success me-2"></i>Initializes
+                                    aggregate statistics tracking</li>
+                                <li><i class="bi bi-arrow-right-circle text-success me-2"></i>Updates existing heroes on
+                                    re-ingestion</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6 class="fw-bold text-success mb-3">
+                                <i class="bi bi-2-circle-fill me-2"></i>Matches Ingestion
+                            </h6>
+                            <ul class="list-unstyled ms-4">
+                                <li class="mb-2"><i class="bi bi-arrow-right-circle text-info me-2"></i>Fetches recent
+                                    public matches list</li>
+                                <li class="mb-2"><i class="bi bi-arrow-right-circle text-info me-2"></i>Retrieves
+                                    detailed data for each match</li>
+                                <li class="mb-2"><i class="bi bi-arrow-right-circle text-info me-2"></i>Creates player
+                                    records automatically</li>
+                                <li class="mb-2"><i class="bi bi-arrow-right-circle text-info me-2"></i>Calculates K/D/A
+                                    and win rate statistics</li>
+                                <li><i class="bi bi-arrow-right-circle text-info me-2"></i>Links matches, players, and
+                                    heroes via junction table</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-4">
+    <!-- Next Steps -->
+    <div class="row">
         <div class="col-12">
-            <div class="card border-primary">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Next Steps After Testing</h5>
-                </div>
-                <div class="card-body">
-                    <ul>
-                        <li>View your data in <strong>pgAdmin</strong> at <a href="http://localhost:5050" target="_blank">localhost:5050</a></li>
-                        <li>Check <strong>RabbitMQ Management</strong> at <a href="http://localhost:15672" target="_blank">localhost:15672</a> (admin/admin123)</li>
-                        <li><strong>Next steps</strong>: Building the dashboard with charts and KPIs!</li>
-                    </ul>
+            <div class="card shadow-premium text-white" style="background: var(--dark-gradient);">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-signpost-fill"></i> Next Steps After Testing
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="http://localhost:5050" target="_blank"
+                                class="text-white text-decoration-none d-block p-3 rounded"
+                                style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                                onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                <i class="bi bi-database-fill fs-3 mb-2"></i>
+                                <div class="fw-bold">Inspect in pgAdmin</div>
+                                <small class="opacity-75">View tables: Heroes, Matches, Players, MatchPlayers</small>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="http://localhost:15672" target="_blank"
+                                class="text-white text-decoration-none d-block p-3 rounded"
+                                style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                                onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                <i class="bi bi-diagram-3-fill fs-3 mb-2"></i>
+                                <div class="fw-bold">Monitor RabbitMQ</div>
+                                <small class="opacity-75">Track message processing (admin / admin123)</small>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a asp-page="/Dashboard/Index" class="text-white text-decoration-none d-block p-3 rounded"
+                                style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                                onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                <i class="bi bi-bar-chart-fill fs-3 mb-2"></i>
+                                <div class="fw-bold">View Dashboard</div>
+                                <small class="opacity-75">Explore charts, KPIs, and analytics</small>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,12 +294,36 @@
 
 @section Scripts {
     <script>
-        // Auto-refresh page after form submission to prevent double-submit
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function() {
+        // Enhanced form submission handling
+        document.querySelectorAll('form').forEach(form =>
+        {
+            form.addEventListener('submit', function (e)
+            {
                 const button = this.querySelector('button[type="submit"]');
+                if (button.disabled)
+                {
+                    e.preventDefault();
+                    return false;
+                }
+
                 button.disabled = true;
-                button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
+                const originalContent = button.innerHTML;
+                const isHeroForm = this.classList.contains('hero-form');
+                const icon = isHeroForm ? 'shield-fill-check' : 'trophy-fill';
+                const text = isHeroForm ? 'Loading Heroes...' : 'Loading Matches...';
+
+                button.innerHTML = `
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    <i class="bi bi-${icon} me-2"></i>${text}
+                                `;
+
+                // Re-enable after timeout to prevent permanent lock
+                setTimeout(() =>
+                {
+                    button.disabled = false;
+                    button.innerHTML = originalContent;
+                }, 30000); // 30 seconds
             });
         });
     </script>

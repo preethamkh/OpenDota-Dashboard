@@ -6,13 +6,20 @@
 }
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">📊 Dashboard</h1>
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createJobModal">
-                <i class="bi bi-plus-circle"></i> Create Job
+            <h1 class="mb-2 fw-bold">
+                <span class="text-gradient">📊 Analytics Dashboard</span>
+            </h1>
+            <p class="text-secondary mb-0">Real-time Dota 2 match statistics and insights - queue jobs with RabbitMQ</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal"
+                data-bs-target="#createJobModal">
+                <i class="bi bi-plus-circle-fill"></i> Create Job
             </button>
-            <button type="button" class="btn btn-secondary" onclick="location.reload()">
+            <button type="button" class="btn btn-secondary shadow-sm" onclick="location.reload()">
                 <i class="bi bi-arrow-clockwise"></i> Refresh
             </button>
         </div>
@@ -20,7 +27,8 @@
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show shadow-premium" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
             @TempData["Success"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
@@ -28,186 +36,188 @@
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show shadow-premium" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
             @TempData["Error"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
     <!-- KPI Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card kpi-card primary">
-                <div class="card-body">
-                    <div class="kpi-label">Total Matches</div>
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card kpi-card primary shadow-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-controller fs-2 text-primary me-3"></i>
+                        <div class="kpi-label">Total Matches</div>
+                    </div>
                     <div class="kpi-value">@Model.ViewModel.TotalMatches.ToString("N0")</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card kpi-card success">
-                <div class="card-body">
-                    <div class="kpi-label">Top Hero</div>
+        <div class="col-md-3">
+            <div class="card kpi-card success shadow-premium">
+                <div class="card-body p-4">
+                    <div class="kpi-label mb-3">
+                        <i class="bi bi-trophy-fill me-2"></i>Top Hero
+                    </div>
                     @if (Model.ViewModel.TopHero != null)
                     {
-                        <div class="d-flex align-items-center mt-2">
+                        <div class="d-flex align-items-center">
                             @if (!string.IsNullOrEmpty(Model.ViewModel.TopHero.ImageUrl))
                             {
                                 <img src="@Model.ViewModel.TopHero.ImageUrl" alt="@Model.ViewModel.TopHero.Name"
-                                    class="hero-img me-2" />
+                                    class="hero-img me-3" style="width: 72px; height: 40px;" />
                             }
                             <div>
-                                <div class="fw-bold">@Model.ViewModel.TopHero.Name</div>
-                                <small class="text-muted">@Model.ViewModel.TopHero.WinRate.ToString("F1")% WR</small>
+                                <div class="fw-bold fs-6">@Model.ViewModel.TopHero.Name</div>
+                                <span class="badge bg-success">@Model.ViewModel.TopHero.WinRate.ToString("F1")% WR</span>
                             </div>
                         </div>
                     }
                     else
                     {
-                        <div class="kpi-value">N/A</div>
+                        <div class="kpi-value" style="font-size: 1.5rem;">N/A</div>
                     }
                 </div>
             </div>
         </div>
 
-        <div class="col-md-2 mb-3">
-            <div class="card kpi-card info">
-                <div class="card-body">
-                    <div class="kpi-label">Top Player</div>
+        <div class="col-md-2">
+            <div class="card kpi-card info shadow-premium">
+                <div class="card-body p-4">
+                    <div class="kpi-label mb-3">
+                        <i class="bi bi-person-fill me-2"></i>Top Player
+                    </div>
                     @if (Model.ViewModel.TopPlayer != null)
                     {
-                        <div class="mt-2">
-                            <div class="fw-bold small">@Model.ViewModel.TopPlayer.Name</div>
-                            <div class="kpi-value">@Model.ViewModel.TopPlayer.Kda.ToString("F2")</div>
-                            <small class="text-muted">KDA</small>
+                        <div>
+                            <div class="fw-bold small text-truncate mb-2" title="@Model.ViewModel.TopPlayer.Name">
+                                @Model.ViewModel.TopPlayer.Name
+                            </div>
+                            <div class="kpi-value" style="font-size: 2rem;">@Model.ViewModel.TopPlayer.Kda.ToString("F2")
+                            </div>
+                            <small class="text-muted">KDA Ratio</small>
                         </div>
                     }
                     else
                     {
-                        <div class="kpi-value">N/A</div>
+                        <div class="kpi-value" style="font-size: 1.5rem;">N/A</div>
                     }
                 </div>
             </div>
         </div>
 
-        <div class="col-md-2 mb-3">
-            <div class="card kpi-card warning">
-                <div class="card-body">
-                    <div class="kpi-label">Total Players</div>
+        <div class="col-md-2">
+            <div class="card kpi-card warning shadow-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-people-fill fs-2 text-warning me-3"></i>
+                        <div class="kpi-label">Total Players</div>
+                    </div>
                     <div class="kpi-value">@Model.ViewModel.TotalPlayers.ToString("N0")</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-2 mb-3">
-            <div class="card kpi-card @(Model.ViewModel.ActiveJobs > 0 ? "success" : "secondary")">
-                <div class="card-body">
-                    <div class="kpi-label">Active Jobs</div>
+        <div class="col-md-2">
+            <div class="card kpi-card @(Model.ViewModel.ActiveJobs > 0 ? "success" : "secondary") shadow-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-cpu-fill fs-2 me-3"
+                            style="color: @(Model.ViewModel.ActiveJobs > 0 ? "#00d084" : "#95a5a6");"></i>
+                        <div class="kpi-label">Active Jobs</div>
+                    </div>
                     <div class="kpi-value">@Model.ViewModel.ActiveJobs</div>
                     @if (Model.ViewModel.ActiveJobs > 0)
                     {
-                        <small class="text-success"><i class="bi bi-circle-fill"></i> Processing</small>
+                        <div class="mt-2">
+                            <span class="badge bg-success">
+                                <i class="bi bi-circle-fill me-1" style="font-size: 0.6rem;"></i>Processing
+                            </span>
+                        </div>
                     }
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Row -->
-    <div class="row mb-4">
-        <div class="col-lg-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">🏆 Top Heroes by Win Rate</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="heroesChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">👑 Top Players by KDA</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="playersChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">📈 Match Volume (Last 24 Hours)</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="volumeChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Recent Matches Table -->
-    <div class="row">
+    <div class="row g-4">
         <div class="col-12">
-            <div class="card">
+            <div class="card shadow-premium">
                 <div class="card-header">
-                    <h5 class="mb-0">⚔️ Recent Matches</h5>
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-swords text-danger me-2"></i>Recent Matches
+                    </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     @if (Model.ViewModel.RecentMatches.Any())
                     {
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover align-middle">
                                 <thead>
                                     <tr>
-                                        <th>Match ID</th>
-                                        <th>Heroes</th>
-                                        <th>K/D/A</th>
-                                        <th>Result</th>
-                                        <th>Duration</th>
-                                        <th>Time</th>
+                                        <th class="text-white">Match ID</th>
+                                        <th class="text-white">Heroes</th>
+                                        <th class="text-white text-center">K/D/A</th>
+                                        <th class="text-white text-center">Result</th>
+                                        <th class="text-white text-center">Duration</th>
+                                        <th class="text-white">Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var match in Model.ViewModel.RecentMatches)
                                     {
-                                        <tr>
+                                        <tr style="transition: var(--transition-fast);">
                                             <td>
-                                                <code>@match.MatchId</code>
+                                                <code class="bg-light px-2 py-1 rounded">@match.MatchId</code>
                                             </td>
                                             <td>
-                                                <div class="d-flex flex-wrap gap-1">
+                                                <div class="d-flex flex-wrap gap-2">
                                                     @foreach (var hero in match.Heroes.Take(10))
                                                     {
                                                         <img src="@hero.HeroImageUrl" alt="@hero.HeroName" class="hero-img"
-                                                            title="@hero.HeroName - @hero.PlayerName (@hero.Kills/@hero.Deaths/@hero.Assists)" />
+                                                            title="@hero.HeroName - @hero.PlayerName (@hero.Kills/@hero.Deaths/@hero.Assists)"
+                                                            style="cursor: pointer;" />
                                                     }
                                                 </div>
                                             </td>
-                                            <td>
-                                                <span class="badge bg-secondary">
-                                                    @match.TotalKills / @match.TotalDeaths / @match.TotalAssists
+                                            <td class="text-center">
+                                                <span class="badge"
+                                                    style="background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%); font-size: 0.95rem; padding: 0.5em 0.9em;">
+                                                    <i class="bi bi-crosshair me-1"></i>@match.TotalKills / @match.TotalDeaths /
+                                                    @match.TotalAssists
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if (match.RadiantWin)
                                                 {
-                                                    <span class="badge bg-success">Radiant Victory</span>
+                                                    <span class="badge"
+                                                        style="background: var(--success-gradient); font-size: 0.9rem;">
+                                                        <i class="bi bi-brightness-high-fill me-1"></i>Radiant Win
+                                                    </span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-danger">Dire Victory</span>
+                                                    <span class="badge"
+                                                        style="background: var(--secondary-gradient); font-size: 0.9rem;">
+                                                        <i class="bi bi-moon-stars-fill me-1"></i>Dire Win
+                                                    </span>
                                                 }
                                             </td>
-                                            <td>@TimeSpan.FromSeconds(match.Duration).ToString(@"mm\:ss")</td>
+                                            <td class="text-center">
+                                                <span class="badge bg-secondary">
+                                                    <i
+                                                        class="bi bi-clock-fill me-1"></i>@TimeSpan.FromSeconds(match.Duration).ToString(@"mm\:ss")
+                                                </span>
+                                            </td>
                                             <td>
-                                                <small class="text-muted">@match.StartTime.ToString("MMM dd, HH:mm")</small>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-calendar-event me-1"></i>@match.StartTime.ToString("MMM dd,                                            HH:mm")
+                                                </small>
                                             </td>
                                         </tr>
                                     }
@@ -217,10 +227,71 @@
                     }
                     else
                     {
-                        <div class="alert alert-info">
-                            No matches found. Use the Test Ingestion page or create an IngestMatches job to load data.
+                        <div class="text-center py-5">
+                            <div style="font-size: 4rem; opacity: 0.3;">📊</div>
+                            <h5 class="text-muted mt-3">No Match Data Available</h5>
+                            <p class="text-secondary">Get started by ingesting some match data</p>
+                            <div class="d-flex gap-2 justify-content-center mt-4">
+                                <a asp-page="/TestIngestion" class="btn btn-primary">
+                                    <i class="bi bi-cloud-download-fill"></i> Test Ingestion
+                                </a>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#createJobModal">
+                                    <i class="bi bi-plus-circle-fill"></i> Create Ingest Job
+                                </button>
+                            </div>
                         </div>
                     }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-6">
+            <div class="card shadow-premium">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-trophy-fill text-warning me-2"></i>Top Heroes by Win Rate
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="chart-container">
+                        <canvas id="heroesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-premium">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-star-fill text-warning me-2"></i>Top Players by KDA
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="chart-container">
+                        <canvas id="playersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="card shadow-premium">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-graph-up-arrow text-info me-2"></i>Match Volume (Last 24 Hours)
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="volumeChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -229,32 +300,56 @@
 
 <!-- Create Job Modal -->
 <div class="modal fade" id="createJobModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create New Job</h5>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header text-white">
+                <div>
+                    <h4 class="modal-title fw-bold mb-1">
+                        <i class="bi bi-plus-circle-fill me-2"></i>Create New Job
+                    </h4>
+                    <small class="opacity-90">Schedule a background data processing task</small>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="post" asp-page-handler="CreateJob">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="jobType" class="form-label">Job Type</label>
-                        <select class="form-select" id="jobType" name="jobType" required>
-                            <option value="IngestMatches">Ingest Matches (Fetch new pro matches)</option>
-                            <option value="IngestHeroes">Ingest Heroes (Update hero list)</option>
-                            <option value="AggregateStats">Aggregate Stats (Recalculate statistics)</option>
+                <div class="modal-body p-4">
+                    <div class="mb-4">
+                        <label for="jobType" class="form-label fw-bold">
+                            <i class="bi bi-gear-fill text-primary me-2"></i>Job Type
+                        </label>
+                        <select class="form-select form-select-lg" id="jobType" name="jobType" required>
+                            <option value="IngestMatches">
+                                🎮 Ingest Matches - Fetch recent professional matches
+                            </option>
+                            <option value="IngestHeroes">
+                                🦸 Ingest Heroes - Update hero database
+                            </option>
+                            <option value="AggregateStats">
+                                📊 Aggregate Stats - Recalculate all statistics
+                            </option>
                         </select>
                     </div>
-                    <div class="alert alert-info">
-                        <small>
-                            <strong>Note:</strong> Jobs are processed by a background worker.
-                            Check the Active Jobs counter to monitor progress.
-                        </small>
+                    <div class="alert"
+                        style="background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%); border: none;">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-info-circle-fill text-info fs-5 me-3 mt-1"></i>
+                            <div>
+                                <strong class="text-info">Background Processing</strong>
+                                <p class="mb-0 mt-1 small text-secondary">
+                                    Jobs are processed asynchronously by a background worker.
+                                    Monitor the <strong>Active Jobs</strong> counter above to track progress.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Job</button>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle-fill"></i> Create Job
+                    </button>
                 </div>
             </form>
         </div>

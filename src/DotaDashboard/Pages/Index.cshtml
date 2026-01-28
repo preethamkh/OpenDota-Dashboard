@@ -4,140 +4,282 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">🎮 Welcome to OpenDota Dashboard</h1>
-    <p class="lead">A production-ready Dota 2 match analytics dashboard</p>
-</div>
-
-<div class="row mt-5">
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <i class="bi bi-database-fill text-primary" style="font-size: 3rem;"></i>
-                <h5 class="card-title mt-3">PostgreSQL Database</h5>
-                <p class="card-text">
-                    Production-ready PostgreSQL database running in Docker. Same setup for development and production.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <i class="bi bi-cloud-download-fill text-success" style="font-size: 3rem;"></i>
-                <h5 class="card-title mt-3">OpenDota API</h5>
-                <p class="card-text">
-                    Fetch match data, heroes, and player statistics from the public OpenDota API with rate limiting.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <i class="bi bi-bar-chart-fill text-info" style="font-size: 3rem;"></i>
-                <h5 class="card-title mt-3">Analytics Dashboard</h5>
-                <p class="card-text">
-                    Visualize match statistics, hero win rates, and player performance with interactive charts.
-                </p>
-            </div>
-        </div>
+<!-- Hero Section -->
+<div class="text-center mb-5">
+    <div style="display: inline-block; font-size: 5rem; margin-bottom: 1rem;">🎮</div>
+    <h1 class="display-3 fw-bold mb-3">
+        <span class="text-gradient">OpenDota Dashboard</span>
+    </h1>
+    <p class="lead fs-4 text-secondary mb-4">
+        Production-ready Dota 2 match analytics platform with real-time data visualization
+    </p>
+    <div class="d-flex gap-3 justify-content-center">
+        <a asp-page="/Dashboard/Index" class="btn btn-primary btn-lg">
+            <i class="bi bi-bar-chart-fill"></i> View Dashboard
+        </a>
+        <a asp-page="/TestIngestion" class="btn btn-success btn-lg">
+            <i class="bi bi-cloud-download-fill"></i> Test API
+        </a>
     </div>
 </div>
 
-<div class="row mt-4">
+<!-- Feature Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-premium">
+            <div class="card-body text-center p-4">
+                <div class="mb-4">
+                    <i class="bi bi-database-fill"
+                        style="font-size: 4rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h4 class="card-title fw-bold mb-3">PostgreSQL Database</h4>
+                <p class="card-text text-secondary">
+                    Enterprise-grade PostgreSQL database running in Docker containers.
+                    Consistent environment across development and production deployments.
+                </p>
+                <a href="http://localhost:5050" target="_blank" class="btn btn-outline-primary">
+                    <i class="bi bi-box-arrow-up-right"></i> Open pgAdmin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-premium">
+            <div class="card-body text-center p-4">
+                <div class="mb-4">
+                    <i class="bi bi-cloud-download-fill"
+                        style="font-size: 4rem; background: var(--success-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h4 class="card-title fw-bold mb-3">OpenDota API Integration</h4>
+                <p class="card-text text-secondary">
+                    Seamless integration with OpenDota's public API. Fetch match data,
+                    hero statistics, and player profiles with intelligent rate limiting.
+                </p>
+                <a href="https://docs.opendota.com" target="_blank" class="btn btn-outline-success">
+                    <i class="bi bi-book-fill"></i> API Documentation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-premium">
+            <div class="card-body text-center p-4">
+                <div class="mb-4">
+                    <i class="bi bi-bar-chart-fill"
+                        style="font-size: 4rem; background: var(--info-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h4 class="card-title fw-bold mb-3">Analytics Dashboard</h4>
+                <p class="card-text text-secondary">
+                    Interactive visualizations powered by Chart.js. Track match statistics,
+                    hero win rates, and player performance in real-time.
+                </p>
+                <a asp-page="/Dashboard/Index" class="btn btn-outline-info">
+                    <i class="bi bi-graph-up-arrow"></i> View Analytics
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Getting Started Section -->
+<div class="row mb-5">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">🚀 Getting Started</h5>
+        <div class="card shadow-premium">
+            <div class="card-header bg-gradient-primary text-white">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-rocket-takeoff-fill"></i> Getting Started Guide</h4>
             </div>
-            <div class="card-body">
-                <ol>
-                    <li class="mb-2">
-                        <strong>Verify Docker is running:</strong>
-                        Check that PostgreSQL and RabbitMQ containers are up
-                        <br>
-                        <code>docker ps</code>
-                    </li>
-                    <li class="mb-2">
-                        <strong>Test data ingestion:</strong>
-                        <a asp-page="/TestIngestion" class="btn btn-sm btn-primary">Go to Test Ingestion Page</a>
-                    </li>
-                    <li class="mb-2">
-                        <strong>View your data:</strong>
-                        Open <a href="http://localhost:5050" target="_blank">pgAdmin</a> to see the database
-                    </li>
-                    <li class="mb-2">
-                        <strong>Check RabbitMQ:</strong>
-                        Open <a href="http://localhost:15672" target="_blank">RabbitMQ Management</a> (admin/admin123)
-                    </li>
-                </ol>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-3 mb-4 mb-md-0">
+                        <div class="text-center p-3 h-100 d-flex flex-column justify-content-center">
+                            <div class="display-4 fw-bold text-gradient mb-2">1</div>
+                            <h5 class="fw-bold">Verify Docker</h5>
+                            <p class="text-secondary small mb-3">Ensure PostgreSQL and RabbitMQ are running</p>
+                            <code class="bg-light p-2 rounded d-block">docker ps</code>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4 mb-md-0">
+                        <div class="text-center p-3 h-100 d-flex flex-column justify-content-center">
+                            <div class="display-4 fw-bold text-gradient mb-2">2</div>
+                            <h5 class="fw-bold">Test Ingestion</h5>
+                            <p class="text-secondary small mb-3">Load sample data from OpenDota API</p>
+                            <a asp-page="/TestIngestion" class="btn btn-sm btn-primary">Test Page</a>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4 mb-md-0">
+                        <div class="text-center p-3 h-100 d-flex flex-column justify-content-center">
+                            <div class="display-4 fw-bold text-gradient mb-2">3</div>
+                            <h5 class="fw-bold">View Database</h5>
+                            <p class="text-secondary small mb-3">Inspect data in pgAdmin interface</p>
+                            <a href="http://localhost:5050" target="_blank" class="btn btn-sm btn-info">Open pgAdmin</a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 h-100 d-flex flex-column justify-content-center">
+                            <div class="display-4 fw-bold text-gradient mb-2">4</div>
+                            <h5 class="fw-bold">Monitor Queue</h5>
+                            <p class="text-secondary small mb-3">Check message processing status</p>
+                            <a href="http://localhost:15672" target="_blank" class="btn btn-sm btn-warning">RabbitMQ
+                                UI</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mt-4">
+<!-- Status & Features Grid -->
+<div class="row g-4 mb-5">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card h-100 shadow-premium">
             <div class="card-header">
-                <h5 class="mb-0">Initial: Setup Complete</h5>
+                <h5 class="mb-0 fw-bold"><i class="bi bi-check-circle-fill text-success"></i> Current Features</h5>
             </div>
             <div class="card-body">
-                <ul class="list-unstyled">
-                    <li>PostgreSQL database configured</li>
-                    <li>Entity Framework Core setup</li>
-                    <li>OpenDota API client</li>
-                    <li>Data ingestion services</li>
-                    <li>Test page functional</li>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <div>
+                            <strong>PostgreSQL Database</strong>
+                            <p class="text-secondary mb-0 small">Production-ready database with Entity Framework Core
+                            </p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <div>
+                            <strong>OpenDota API Client</strong>
+                            <p class="text-secondary mb-0 small">HTTP client with intelligent rate limiting</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <div>
+                            <strong>Data Ingestion Pipeline</strong>
+                            <p class="text-secondary mb-0 small">Automated match and hero data synchronization</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <div>
+                            <strong>Analytics Dashboard</strong>
+                            <p class="text-secondary mb-0 small">Interactive charts with Chart.js visualization</p>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <div>
+                            <strong>Background Job Worker</strong>
+                            <p class="text-secondary mb-0 small">RabbitMQ message processing with retry logic</p>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 
     <div class="col-md-6">
-        <div class="card">
+        <div class="card h-100 shadow-premium">
             <div class="card-header">
-                <h5 class="mb-0">Coming Next</h5>
+                <h5 class="mb-0 fw-bold"><i class="bi bi-lightbulb-fill text-warning"></i> Key Technologies</h5>
             </div>
             <div class="card-body">
-                <ul class="list-unstyled">
-                    <li>Dashboard with KPIs</li>
-                    <li>Chart.js visualizations</li>
-                    <li>RabbitMQ background jobs</li>
-                    <li>Recent matches table</li>
-                    <li>Job worker service</li>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-dot text-primary fs-3 me-2"></i>
+                        <div>
+                            <strong>ASP.NET Core 8.0</strong>
+                            <p class="text-secondary mb-0 small">Modern web framework with Razor Pages</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-dot text-primary fs-3 me-2"></i>
+                        <div>
+                            <strong>Entity Framework Core</strong>
+                            <p class="text-secondary mb-0 small">Code-first ORM with migrations</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-dot text-primary fs-3 me-2"></i>
+                        <div>
+                            <strong>PostgreSQL 16</strong>
+                            <p class="text-secondary mb-0 small">Robust relational database in Docker</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-dot text-primary fs-3 me-2"></i>
+                        <div>
+                            <strong>RabbitMQ</strong>
+                            <p class="text-secondary mb-0 small">Message queue for async job processing</p>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start">
+                        <i class="bi bi-dot text-primary fs-3 me-2"></i>
+                        <div>
+                            <strong>Chart.js</strong>
+                            <p class="text-secondary mb-0 small">Beautiful, responsive data visualizations</p>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mt-4 mb-5">
+<!-- Quick Links Section -->
+<div class="row">
     <div class="col-12">
-        <div class="alert alert-info">
-            <h5 class="alert-heading">ℹQuick Links</h5>
-            <ul class="mb-0">
-                <li><strong>Your App:</strong> You're here!</li>
-                <li><strong>Test Ingestion:</strong> <a asp-page="/TestIngestion">Test the API integration</a></li>
-                <li>
-                    <strong>pgAdmin:</strong> <a href="http://localhost:5050" target="_blank">Database management UI</a>
-                </li>
-                <li>
-                    <strong>RabbitMQ:</strong> <a href="http://localhost:15672" target="_blank">
-                        Message queue
-                        management
-                    </a>
-                </li>
-                <li>
-                    <strong>OpenDota API:</strong> <a href="https://docs.opendota.com" target="_blank">
-                        API
-                        documentation
-                    </a>
-                </li>
-            </ul>
+        <div class="card shadow-premium bg-gradient-primary text-white">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-4"><i class="bi bi-link-45deg"></i> Quick Access Links</h5>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <a asp-page="/Dashboard/Index" class="text-white text-decoration-none d-block p-3 rounded"
+                            style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                            onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                            <i class="bi bi-bar-chart-fill fs-4"></i>
+                            <div class="fw-bold mt-2">Dashboard</div>
+                            <small class="opacity-75">View analytics & stats</small>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a asp-page="/TestIngestion" class="text-white text-decoration-none d-block p-3 rounded"
+                            style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                            onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                            <i class="bi bi-cloud-download-fill fs-4"></i>
+                            <div class="fw-bold mt-2">Test Ingestion</div>
+                            <small class="opacity-75">Load sample data</small>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="http://localhost:5050" target="_blank"
+                            class="text-white text-decoration-none d-block p-3 rounded"
+                            style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                            onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                            <i class="bi bi-database-fill fs-4"></i>
+                            <div class="fw-bold mt-2">pgAdmin</div>
+                            <small class="opacity-75">Database management</small>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="http://localhost:15672" target="_blank"
+                            class="text-white text-decoration-none d-block p-3 rounded"
+                            style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                            onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                            <i class="bi bi-diagram-3-fill fs-4"></i>
+                            <div class="fw-bold mt-2">RabbitMQ</div>
+                            <small class="opacity-75">admin / admin123</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
