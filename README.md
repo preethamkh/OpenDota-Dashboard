@@ -1,6 +1,8 @@
 # OpenDota Dashboard with RabbitMQ
 
-## Project Overview ()
+<img width="2527" height="893" alt="image" src="https://github.com/user-attachments/assets/0146f9e9-ba3d-4c50-b87f-a2166f4758ff" />
+
+## Project Overview
 
 A Dota 2 match analytics dashboard that:
 - **Ingests data** from OpenDota API
