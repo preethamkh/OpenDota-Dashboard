@@ -3,7 +3,6 @@ using DotaDashboard.Models.DTOs;
 using DotaDashboard.Models.Entities;
 using DotaDashboard.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Polly;
 
 namespace DotaDashboard.Services.Implementation;
 
@@ -16,12 +15,13 @@ public class AggregateStatsService(ApplicationDbContext context, ILogger<Aggrega
         {
             logger.LogInformation("Calculating top {Count} heroes by win rate (minimum picks: {MinimumPicks})", count, minimumPicks);
 
-            // just load what we need (defensive pattern)
-            // if we decide to add more fields or if there are more properties in the Hero entity (lazy loaded)
-            var topHeroes = await context.Heroes
+            // ✅ FIX: Fetch to memory FIRST, then calculate WinRate
+            var heroes = await context.Heroes
                 .Where(h => h.TotalPicks >= minimumPicks)
-                .OrderByDescending(h => h.WinRate)
-                .Take(count)
+                .ToListAsync();  // ← Bring to memory
+
+            // Now calculate WinRate in C# (not SQL)
+            var topHeroes = heroes
                 .Select(h => new TopHeroDto
                 {
                     HeroId = h.HeroId,
@@ -29,11 +29,13 @@ public class AggregateStatsService(ApplicationDbContext context, ILogger<Aggrega
                     ImageUrl = h.ImageUrl,
                     TotalPicks = h.TotalPicks,
                     TotalWins = h.TotalWins,
-                    WinRate = h.WinRate
+                    WinRate = h.TotalPicks > 0 ? (h.TotalWins / (double)h.TotalPicks) * 100 : 0  // ← Calculate here
                 })
-                .ToListAsync();
+                .OrderByDescending(h => h.WinRate)
+                .Take(count)
+                .ToList();
 
-            logger.LogInformation("Top heroes by win rate (minimum picks: {MinimumPicks}): {TopHeroes}", minimumPicks, topHeroes);
+            logger.LogInformation("Found {Count} top heroes with win rates", topHeroes.Count);
             return topHeroes;
         }
         catch (Exception ex)
@@ -50,12 +52,13 @@ public class AggregateStatsService(ApplicationDbContext context, ILogger<Aggrega
             logger.LogInformation("Calculating top {Count} players by KDA (min matches: {MinimumMatches})",
                 count, minimumMatches);
 
-            var topPlayers = await context.Players
+            // ✅ FIX: Fetch to memory FIRST
+            var players = await context.Players
                 .Where(p => p.TotalMatches >= minimumMatches)
-                .OrderByDescending(p => p.TotalDeaths > 0
-                    ? (double)(p.TotalKills + p.TotalAssists) / p.TotalDeaths
-                    : p.TotalKills + p.TotalAssists)
-                .Take(count)
+                .ToListAsync();  // ← Bring to memory
+
+            // Calculate KDA in C# (not SQL)
+            var topPlayers = players
                 .Select(p => new TopPlayerDto
                 {
                     PlayerId = p.PlayerId,
@@ -67,9 +70,11 @@ public class AggregateStatsService(ApplicationDbContext context, ILogger<Aggrega
                     TotalMatches = p.TotalMatches,
                     Kda = p.TotalDeaths > 0
                         ? (double)(p.TotalKills + p.TotalAssists) / p.TotalDeaths
-                        : p.TotalKills + p.TotalAssists
+                        : p.TotalKills + p.TotalAssists  // ← Calculate here
                 })
-                .ToListAsync();
+                .OrderByDescending(p => p.Kda)
+                .Take(count)
+                .ToList();
 
             logger.LogInformation("Found {Count} top players", topPlayers.Count);
             return topPlayers;
@@ -148,7 +153,7 @@ public class AggregateStatsService(ApplicationDbContext context, ILogger<Aggrega
         {
             return await context.Jobs
                 .Where(j => j.Status == JobStatus.Pending || j.Status == JobStatus.Running)
-                .CountAsync();  
+                .CountAsync();
         }
         catch (Exception ex)
         {
