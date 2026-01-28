@@ -22,6 +22,11 @@ public interface IJobService
     Task UpdateJobProgressAsync(int jobId, int matchesProcessed);
 
     /// <summary>
+    /// Mark job as completed
+    /// </summary>
+    Task CompleteJobAsync(int jobId, int matchesProcessed);
+
+    /// <summary>
     /// Mark job as failed
     /// </summary>
     Task FailJobAsync(int jobId, string error);
