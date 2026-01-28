@@ -1,6 +1,6 @@
-# OpenDota Dashboard - Production grade
+# OpenDota Dashboard with RabbitMQ
 
-## Project Overview (draft)
+## Project Overview ()
 
 A Dota 2 match analytics dashboard that:
 - **Ingests data** from OpenDota API
