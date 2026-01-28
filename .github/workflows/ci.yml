@@ -1,0 +1,56 @@
+name: CI
+
+# Trigger the workflow on push to main branch or any pull request
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # Setup .NET SDK
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    # Restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    # Build the solution
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    
+    # Run tests with coverage
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
+    
+    # Generate coverage report (optional - for badge)
+    - name: Generate coverage report
+      if: success()
+      run: |
+        dotnet tool install -g dotnet-reportgenerator-globaltool
+        reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./coverage -reporttypes:Html
+    
+    # Upload coverage report as artifact
+    - name: Upload coverage report
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: ./coverage
+    
+    # Display test results summary
+    - name: Test Summary
+      if: always()
+      run: echo "✅ Tests completed. Check the Actions tab for detailed results."
