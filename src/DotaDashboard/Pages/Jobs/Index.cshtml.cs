@@ -5,17 +5,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DotaDashboard.Pages.Jobs
 {
-    public class IndexModel : PageModel
+    public class IndexModel(IJobService jobService, ILogger<IndexModel> logger) : PageModel
     {
-        private readonly IJobService _jobService;
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(IJobService jobService, ILogger<IndexModel> logger)
-        {
-            _jobService = jobService;
-            _logger = logger;
-        }
-
         public List<Job> Jobs { get; set; } = new();
         public string? StatusFilter { get; set; }
         public int CurrentPage { get; set; } = 1;
@@ -35,7 +26,7 @@ namespace DotaDashboard.Pages.Jobs
                 CurrentPage = page;
 
                 // Get all jobs with pagination
-                Jobs = await _jobService.GetJobsAsync(page, 20);
+                Jobs = await jobService.GetJobsAsync(page);
 
                 // Filter by status if specified
                 if (!string.IsNullOrEmpty(status))
@@ -43,11 +34,11 @@ namespace DotaDashboard.Pages.Jobs
                     Jobs = Jobs.Where(j => j.Status.Equals(status, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
 
-                _logger.LogInformation("Loaded {Count} jobs for page {Page}", Jobs.Count, page);
+                logger.LogInformation("Loaded {Count} jobs for page {Page}", Jobs.Count, page);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading jobs");
+                logger.LogError(ex, "Error loading jobs");
             }
         }
         /// <summary>
@@ -59,15 +50,15 @@ namespace DotaDashboard.Pages.Jobs
         {
             try
             {
-                _logger.LogInformation("Retrying job {JobId}", jobId);
+                logger.LogInformation("Retrying job {JobId}", jobId);
 
-                await _jobService.RetryJobAsync(jobId);
+                await jobService.RetryJobAsync(jobId);
 
                 TempData["Success"] = $"Job {jobId} has been queued for retry!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrying job {JobId}", jobId);
+                logger.LogError(ex, "Error retrying job {JobId}", jobId);
                 TempData["Error"] = $"Failed to retry job: {ex.Message}";
             }
 
@@ -83,15 +74,15 @@ namespace DotaDashboard.Pages.Jobs
         {
             try
             {
-                _logger.LogInformation("Creating job of type {JobType}", jobType);
+                logger.LogInformation("Creating job of type {JobType}", jobType);
 
-                await _jobService.CreateJobAsync(jobType);
+                await jobService.CreateJobAsync(jobType);
 
                 TempData["Success"] = $"Job '{jobType}' created successfully!";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating job");
+                logger.LogError(ex, "Error creating job");
                 TempData["Error"] = $"Failed to create job: {ex.Message}";
             }
 
