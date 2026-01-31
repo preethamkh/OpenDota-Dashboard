@@ -52,7 +52,7 @@ public class AggregateStatsService(ApplicationDbContext context, ILogger<Aggrega
             logger.LogInformation("Calculating top {Count} players by KDA (min matches: {MinimumMatches})",
                 count, minimumMatches);
 
-            // ✅ FIX: Fetch to memory FIRST
+            // FIX: Fetch to memory FIRST
             var players = await context.Players
                 .Where(p => p.TotalMatches >= minimumMatches)
                 .ToListAsync();  // ← Bring to memory

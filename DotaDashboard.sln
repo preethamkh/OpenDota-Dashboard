@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36717.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotaDashboard", "src\DotaDashboard\DotaDashboard.csproj", "{AB011E0F-A443-0420-2A2E-8DB626920653}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotaDashboard.Tests", "tests\DotaDashboard.Tests\DotaDashboard.Tests.csproj", "{83D7D52D-F287-47D6-BF30-3103911A3ECC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{AB011E0F-A443-0420-2A2E-8DB626920653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB011E0F-A443-0420-2A2E-8DB626920653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB011E0F-A443-0420-2A2E-8DB626920653}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D7D52D-F287-47D6-BF30-3103911A3ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D7D52D-F287-47D6-BF30-3103911A3ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D7D52D-F287-47D6-BF30-3103911A3ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D7D52D-F287-47D6-BF30-3103911A3ECC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

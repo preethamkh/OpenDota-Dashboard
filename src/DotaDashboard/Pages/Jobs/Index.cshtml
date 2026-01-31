@@ -1,0 +1,287 @@
+﻿@page
+@model DotaDashboard.Pages.Jobs.IndexModel
+@{
+    ViewData["Title"] = "Jobs Management";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">📋 Jobs Management</h1>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createJobModal">
+                <i class="bi bi-plus-circle"></i> Create Job
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="location.reload()">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Filter Tabs -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link @(string.IsNullOrEmpty(Model.StatusFilter) ? "active" : "")"
+               asp-page="/Jobs/Index">
+                All Jobs
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.StatusFilter == "Pending" ? "active" : "")"
+               asp-page="/Jobs/Index" asp-route-status="Pending">
+                <i class="bi bi-clock"></i> Pending
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.StatusFilter == "Running" ? "active" : "")"
+               asp-page="/Jobs/Index" asp-route-status="Running">
+                <i class="bi bi-arrow-repeat"></i> Running
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.StatusFilter == "Done" ? "active" : "")"
+               asp-page="/Jobs/Index" asp-route-status="Done">
+                <i class="bi bi-check-circle"></i> Done
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.StatusFilter == "Failed" ? "active" : "")"
+               asp-page="/Jobs/Index" asp-route-status="Failed">
+                <i class="bi bi-x-circle"></i> Failed
+            </a>
+        </li>
+    </ul>
+
+    <!-- Jobs Table -->
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Jobs.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Job ID</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Target</th>
+                                <th>Matches Processed</th>
+                                <th>Retries</th>
+                                <th>Created</th>
+                                <th>Completed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var job in Model.Jobs)
+                            {
+                                <tr>
+                                    <td><code>@job.JobId</code></td>
+                                    <td>
+                                        <span class="badge bg-secondary">@job.Type</span>
+                                    </td>
+                                    <td>
+                                        @switch (job.Status)
+                                        {
+                                            case "Pending":
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="bi bi-clock"></i> Pending
+                                                </span>
+                                                break;
+                                            case "Running":
+                                                <span class="badge bg-primary">
+                                                    <i class="bi bi-arrow-repeat"></i> Running
+                                                </span>
+                                                break;
+                                            case "Done":
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i> Done
+                                                </span>
+                                                break;
+                                            case "Failed":
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-x-circle"></i> Failed
+                                                </span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(job.Target))
+                                        {
+                                            <small class="text-muted">@job.Target</small>
+                                        }
+                                        else
+                                        {
+                                            <small class="text-muted">-</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@job.MatchesProcessed</span>
+                                    </td>
+                                    <td>
+                                        @if (job.Retries > 0)
+                                        {
+                                            <span class="badge bg-warning text-dark">@job.Retries</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">0</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            @job.CreatedAt.ToString("MMM dd, HH:mm:ss")
+                                        </small>
+                                    </td>
+                                    <td>
+                                        @if (job.CompletedAt.HasValue)
+                                        {
+                                            <small class="text-muted">
+                                                @job.CompletedAt.Value.ToString("MMM dd, HH:mm:ss")
+                                            </small>
+                                        }
+                                        else
+                                        {
+                                            <small class="text-muted">-</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (job.Status == "Failed")
+                                        {
+                                            <form method="post" asp-page-handler="RetryJob" class="d-inline">
+                                                <input type="hidden" name="jobId" value="@job.JobId" />
+                                                <button type="submit" class="btn btn-sm btn-warning"
+                                                        title="Retry this job">
+                                                    <i class="bi bi-arrow-clockwise"></i> Retry
+                                                </button>
+                                            </form>
+                                        }
+                                        <button type="button" class="btn btn-sm btn-info"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#jobDetailsModal"
+                                                onclick="showJobDetails(@job.JobId, '@job.Type', '@job.Status', '@job.Error', '@job.CreatedAt', '@job.UpdatedAt')"
+                                                title="View details">
+                                            <i class="bi bi-info-circle"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No jobs found. Create a job to get started!
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Create Job Modal -->
+<div class="modal fade" id="createJobModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Job</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="CreateJob">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="jobType" class="form-label">Job Type</label>
+                        <select class="form-select" id="jobType" name="jobType" required>
+                            <option value="IngestMatches">Ingest Matches (Fetch new pro matches)</option>
+                            <option value="IngestHeroes">Ingest Heroes (Update hero list)</option>
+                            <option value="AggregateStats">Aggregate Stats (Recalculate statistics)</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-info">
+                        <small>
+                            <strong>Note:</strong> Jobs are processed by a background worker.
+                            Monitor progress on this page.
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Job</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Job Details Modal -->
+<div class="modal fade" id="jobDetailsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Job Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Job ID:</dt>
+                    <dd class="col-sm-8"><code id="detailJobId"></code></dd>
+
+                    <dt class="col-sm-4">Type:</dt>
+                    <dd class="col-sm-8"><span id="detailType" class="badge bg-secondary"></span></dd>
+
+                    <dt class="col-sm-4">Status:</dt>
+                    <dd class="col-sm-8"><span id="detailStatus"></span></dd>
+
+                    <dt class="col-sm-4">Created:</dt>
+                    <dd class="col-sm-8" id="detailCreated"></dd>
+
+                    <dt class="col-sm-4">Last Updated:</dt>
+                    <dd class="col-sm-8" id="detailUpdated"></dd>
+
+                    <dt class="col-sm-4">Error:</dt>
+                    <dd class="col-sm-8">
+                        <pre id="detailError" class="bg-light p-2" style="max-height: 200px; overflow-y: auto;"></pre>
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showJobDetails(jobId, type, status, error, created, updated) {
+            document.getElementById('detailJobId').textContent = jobId;
+            document.getElementById('detailType').textContent = type;
+            document.getElementById('detailStatus').textContent = status;
+            document.getElementById('detailCreated').textContent = created;
+            document.getElementById('detailUpdated').textContent = updated;
+            document.getElementById('detailError').textContent = error || 'No errors';
+        }
+
+        // Auto-refresh every 10 seconds if there are pending/running jobs
+        const hasPendingJobs = document.querySelectorAll('.badge.bg-warning, .badge.bg-primary').length > 0;
+        if (hasPendingJobs) {
+            setTimeout(() => location.reload(), 10000);
+        }
+    </script>
+}
