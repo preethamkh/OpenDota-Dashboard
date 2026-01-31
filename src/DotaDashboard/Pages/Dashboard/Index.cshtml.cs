@@ -40,11 +40,11 @@ public class IndexModel : PageModel
             ViewModel.ActiveJobs = await _aggregateStatsService.GetActiveJobCountAsync();
 
             // Load Top Heroes
-            ViewModel.TopHeroes = await _aggregateStatsService.GetTopHeroesByWinRateAsync(5, 1);
+            ViewModel.TopHeroes = await _aggregateStatsService.GetTopHeroesByWinRateAsync(5, 10);
             ViewModel.TopHero = ViewModel.TopHeroes.FirstOrDefault();
 
             // Load Top Players
-            ViewModel.TopPlayers = await _aggregateStatsService.GetTopPlayersByKdaAsync(5, 1);
+            ViewModel.TopPlayers = await _aggregateStatsService.GetTopPlayersByKdaAsync(5, 5);
             ViewModel.TopPlayer = ViewModel.TopPlayers.FirstOrDefault();
 
             // Load Match Volume
