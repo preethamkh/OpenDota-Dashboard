@@ -88,10 +88,5 @@ namespace DotaDashboard.Pages.Jobs
 
             return RedirectToPage();
         }
-
-
-        public void OnGet()
-        {
-        }
     }
 }
