@@ -1,0 +1,39 @@
+# File: .dockerignore
+
+# Build outputs
+bin/
+obj/
+out/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker/
+.dockerignore
+
+# Git
+.git/
+.github/
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+
+# Tests
+tests/
+
+# Local development
+appsettings.Development.json
+
+# Solution file
+*.sln

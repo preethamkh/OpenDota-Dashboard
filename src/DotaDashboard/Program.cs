@@ -94,4 +94,8 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+// Listen on PORT environment variable (Render requirement)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
+
 app.Run();
