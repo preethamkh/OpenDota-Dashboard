@@ -68,13 +68,22 @@ using (var scope = app.Services.CreateScope())
     try
     {
         logger.LogInformation("Applying database migrations...");
-        dbContext.Database.Migrate();
+
+        // Use async migration with increased timeout
+        dbContext.Database.SetCommandTimeout(180); // 3 minutes
+        await dbContext.Database.MigrateAsync();
+
         logger.LogInformation("Database migrations applied successfully");
     }
     catch (Exception ex)
     {
         logger.LogError(ex, "An error occurred while migrating the database");
-        throw;
+
+        // Don't throw in production - let app start even if migrations fail
+        if (builder.Environment.IsDevelopment())
+        {
+            throw;
+        }
     }
 }
 
@@ -95,7 +104,12 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 // Listen on PORT environment variable (Render requirement)
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
+// Only override URLs in production/non-development environments
+if (!app.Environment.IsDevelopment())
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+    app.Urls.Clear(); // Clear any existing URLs
+    app.Urls.Add($"http://0.0.0.0:{port}");
+}
 
 app.Run();
