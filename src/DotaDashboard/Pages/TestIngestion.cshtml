@@ -169,10 +169,7 @@
                                 <div>
                                     <strong class="d-block mb-2">Database Access</strong>
                                     <p class="text-secondary small mb-0">
-                                        All data is stored in PostgreSQL running in Docker. Access pgAdmin at
-                                        <a href="http://localhost:5050" target="_blank"
-                                            class="fw-bold">localhost:5050</a>
-                                        to inspect tables and query data.
+                                        All data is stored in PostgreSQL running on Supabase.
                                     </p>
                                 </div>
                             </div>
@@ -253,29 +250,44 @@
                         <i class="bi bi-signpost-fill"></i> Next Steps After Testing
                     </h5>
                     <div class="row g-3">
-                        <div class="col-md-4">
-                            <a href="http://localhost:5050" target="_blank"
-                                class="text-white text-decoration-none d-block p-3 rounded"
+                        @if (Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1")
+                        {
+                            <div class="col-md-6">
+                                <a href="http://localhost:5050" target="_blank"
+                                    class="text-white text-decoration-none d-block p-3 rounded"
+                                    style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                                    onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                                    onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                    <i class="bi bi-database-fill fs-3 mb-2"></i>
+                                    <div class="fw-bold">Inspect in pgAdmin</div>
+                                    <small class="opacity-75">View tables: Heroes, Matches, Players, MatchPlayers</small>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="http://localhost:15672" target="_blank"
+                                    class="text-white text-decoration-none d-block p-3 rounded"
+                                    style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                                    onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                                    onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                    <i class="bi bi-diagram-3-fill fs-3 mb-2"></i>
+                                    <div class="fw-bold">Monitor RabbitMQ</div>
+                                    <small class="opacity-75">Track message processing (admin / admin123)</small>
+                                </a>
+                            </div>
+                        }
+                        <div
+                            class="@(Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1" ? "col-md-12" : "col-md-6 offset-md-3")">
+                            <a asp-page="/Dashboard/Index" class="text-white text-decoration-none d-block p-3 rounded"
                                 style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
                                 onmouseover="this.style.background='rgba(255,255,255,0.2)'"
                                 onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                                <i class="bi bi-database-fill fs-3 mb-2"></i>
-                                <div class="fw-bold">Inspect in pgAdmin</div>
-                                <small class="opacity-75">View tables: Heroes, Matches, Players, MatchPlayers</small>
+                                <i class="bi bi-bar-chart-fill fs-3 mb-2"></i>
+                                <div class="fw-bold">View Dashboard</div>
+                                <small class="opacity-75">Explore charts, KPIs, and analytics</small>
                             </a>
                         </div>
-                        <div class="col-md-4">
-                            <a href="http://localhost:15672" target="_blank"
-                                class="text-white text-decoration-none d-block p-3 rounded"
-                                style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
-                                onmouseover="this.style.background='rgba(255,255,255,0.2)'"
-                                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                                <i class="bi bi-diagram-3-fill fs-3 mb-2"></i>
-                                <div class="fw-bold">Monitor RabbitMQ</div>
-                                <small class="opacity-75">Track message processing (admin / admin123)</small>
-                            </a>
-                        </div>
-                        <div class="col-md-4">
+                        <div
+                            class="@(Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1" ? "col-md-12" : "col-md-4 offset-md-4")">
                             <a asp-page="/Dashboard/Index" class="text-white text-decoration-none d-block p-3 rounded"
                                 style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
                                 onmouseover="this.style.background='rgba(255,255,255,0.2)'"
@@ -295,13 +307,10 @@
 @section Scripts {
     <script>
         // Enhanced form submission handling
-        document.querySelectorAll('form').forEach(form =>
-        {
-            form.addEventListener('submit', function (e)
-            {
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function (e) {
                 const button = this.querySelector('button[type="submit"]');
-                if (button.disabled)
-                {
+                if (button.disabled) {
                     e.preventDefault();
                     return false;
                 }
@@ -314,13 +323,12 @@
                 const text = isHeroForm ? 'Loading Heroes...' : 'Loading Matches...';
 
                 button.innerHTML = `
-                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                    <i class="bi bi-${icon} me-2"></i>${text}
-                                `;
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        <i class="bi bi-${icon} me-2"></i>${text}
+                                    `;
 
                 // Re-enable after timeout to prevent permanent lock
-                setTimeout(() =>
-                {
+                setTimeout(() => {
                     button.disabled = false;
                     button.innerHTML = originalContent;
                 }, 30000); // 30 seconds
