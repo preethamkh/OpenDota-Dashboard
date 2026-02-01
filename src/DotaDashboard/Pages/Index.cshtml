@@ -37,9 +37,12 @@
                     Enterprise-grade PostgreSQL database running in Docker containers.
                     Consistent environment across development and production deployments.
                 </p>
-                <a href="http://localhost:5050" target="_blank" class="btn btn-outline-primary">
-                    <i class="bi bi-box-arrow-up-right"></i> Open pgAdmin
-                </a>
+                @if (Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1")
+                {
+                    <a href="http://localhost:5050" target="_blank" class="btn btn-outline-primary">
+                        <i class="bi bi-box-arrow-up-right"></i> Open pgAdmin
+                    </a>
+                }
             </div>
         </div>
     </div>
@@ -108,23 +111,26 @@
                             <a asp-page="/TestIngestion" class="btn btn-sm btn-primary">Test Page</a>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-4 mb-md-0">
-                        <div class="text-center p-3 h-100 d-flex flex-column justify-content-center">
-                            <div class="display-4 fw-bold text-gradient mb-2">3</div>
-                            <h5 class="fw-bold">View Database</h5>
-                            <p class="text-secondary small mb-3">Inspect data in pgAdmin interface</p>
-                            <a href="http://localhost:5050" target="_blank" class="btn btn-sm btn-info">Open pgAdmin</a>
+                    @if (Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1")
+                    {
+                        <div class="col-md-3 mb-4 mb-md-0">
+                            <div class="text-center p-3 h-100 d-flex flex-column justify-content-center">
+                                <div class="display-4 fw-bold text-gradient mb-2">3</div>
+                                <h5 class="fw-bold">View Database</h5>
+                                <p class="text-secondary small mb-3">Inspect data in pgAdmin interface</p>
+                                <a href="http://localhost:5050" target="_blank" class="btn btn-sm btn-info">Open pgAdmin</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-center p-3 h-100 d-flex flex-column justify-content-center">
-                            <div class="display-4 fw-bold text-gradient mb-2">4</div>
-                            <h5 class="fw-bold">Monitor Queue</h5>
-                            <p class="text-secondary small mb-3">Check message processing status</p>
-                            <a href="http://localhost:15672" target="_blank" class="btn btn-sm btn-warning">RabbitMQ
-                                UI</a>
+                        <div class="col-md-3">
+                            <div class="text-center p-3 h-100 d-flex flex-column justify-content-center">
+                                <div class="display-4 fw-bold text-gradient mb-2">4</div>
+                                <h5 class="fw-bold">Monitor Queue</h5>
+                                <p class="text-secondary small mb-3">Check message processing status</p>
+                                <a href="http://localhost:15672" target="_blank" class="btn btn-sm btn-warning">RabbitMQ
+                                    UI</a>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
@@ -256,28 +262,31 @@
                             <small class="opacity-75">Load sample data</small>
                         </a>
                     </div>
-                    <div class="col-md-3">
-                        <a href="http://localhost:5050" target="_blank"
-                            class="text-white text-decoration-none d-block p-3 rounded"
-                            style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
-                            onmouseover="this.style.background='rgba(255,255,255,0.2)'"
-                            onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                            <i class="bi bi-database-fill fs-4"></i>
-                            <div class="fw-bold mt-2">pgAdmin</div>
-                            <small class="opacity-75">Database management</small>
-                        </a>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="http://localhost:15672" target="_blank"
-                            class="text-white text-decoration-none d-block p-3 rounded"
-                            style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
-                            onmouseover="this.style.background='rgba(255,255,255,0.2)'"
-                            onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                            <i class="bi bi-diagram-3-fill fs-4"></i>
-                            <div class="fw-bold mt-2">RabbitMQ</div>
-                            <small class="opacity-75">admin / admin123</small>
-                        </a>
-                    </div>
+                    @if (Request.Host.Host == "localhost" || Request.Host.Host == "127.0.0.1")
+                    {
+                        <div class="col-md-3">
+                            <a href="http://localhost:5050" target="_blank"
+                                class="text-white text-decoration-none d-block p-3 rounded"
+                                style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                                onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                <i class="bi bi-database-fill fs-4"></i>
+                                <div class="fw-bold mt-2">pgAdmin</div>
+                                <small class="opacity-75">Database management</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="http://localhost:15672" target="_blank"
+                                class="text-white text-decoration-none d-block p-3 rounded"
+                                style="background: rgba(255,255,255,0.1); transition: var(--transition-fast);"
+                                onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                <i class="bi bi-diagram-3-fill fs-4"></i>
+                                <div class="fw-bold mt-2">RabbitMQ</div>
+                                <small class="opacity-75">admin / admin123</small>
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
