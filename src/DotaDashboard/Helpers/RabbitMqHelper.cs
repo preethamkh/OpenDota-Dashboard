@@ -26,12 +26,16 @@ public class RabbitMqHelper : IDisposable
 
         try
         {
+            var userName = _configuration["RabbitMQ:UserName"] ?? "admin";
+            var virtualHost = _configuration["RabbitMQ:VirtualHost"] ?? userName; // Default to username for CloudAMQP
+
             var factory = new ConnectionFactory
             {
                 HostName = _configuration["RabbitMQ:HostName"] ?? "localhost",
                 Port = int.Parse(_configuration["RabbitMQ:Port"] ?? "5672"),
-                UserName = _configuration["RabbitMQ:UserName"] ?? "admin",
+                UserName = userName,
                 Password = _configuration["RabbitMQ:Password"] ?? "admin123",
+                VirtualHost = virtualHost,
                 AutomaticRecoveryEnabled = true,
                 NetworkRecoveryInterval = TimeSpan.FromSeconds(10)
             };
