@@ -26,7 +26,7 @@ public class RabbitMqHelper : IDisposable
 
         try
         {
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory
             {
                 HostName = _configuration["RabbitMQ:HostName"] ?? "localhost",
                 Port = int.Parse(_configuration["RabbitMQ:Port"] ?? "5672"),
@@ -35,6 +35,21 @@ public class RabbitMqHelper : IDisposable
                 AutomaticRecoveryEnabled = true,
                 NetworkRecoveryInterval = TimeSpan.FromSeconds(10)
             };
+
+            // Enable SSL/TLS for cloud RabbitMQ services (CloudAMQP)
+            var useSsl = _configuration.GetValue("RabbitMQ:UseSsl", false);
+            if (useSsl)
+            {
+                factory.Ssl = new SslOption
+                {
+                    Enabled = true,
+                    ServerName = factory.HostName,
+                    AcceptablePolicyErrors = System.Net.Security.SslPolicyErrors.RemoteCertificateNameMismatch |
+                                             System.Net.Security.SslPolicyErrors.RemoteCertificateChainErrors
+                };
+                _logger.LogInformation("SSL/TLS enabled for RabbitMQ connection to {HostName}", factory.HostName);
+            }
+
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.QueueDeclare(
